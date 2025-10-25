@@ -3,7 +3,6 @@ const title = document.getElementById("title");
 const form = document.getElementById("form");
 const projectTextbox = document.getElementById("projectTextbox");
 
-
 function createNewProject(inputLabel) {
     let newProject = {
         label: inputLabel,
@@ -25,7 +24,6 @@ createButton.addEventListener("click", () => {
 form.addEventListener('submit', function(event) {
   event.preventDefault(); // Prevents page reload
   projectsArray.push(createNewProject(projectTextbox.value));
-  console.log("Project added to array: ", projectsArray);
 });
 
 const description = document.getElementById("oldDescription")
