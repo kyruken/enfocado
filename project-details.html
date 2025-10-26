@@ -14,24 +14,7 @@
     }
   </style>
   </head>
-<<<<<<< Updated upstream
   <body class="bg-light py-5">
-
-  <h1 id="title">Details Page</h1>
-=======
-  <body class="bg-light py">
-		<!-- Nav header -->
-		<nav class="navbar bg-body-tertiary">
-			<div class="container-fluid">		
-				<a class="navbar-brand" href="#">Project Details</a>
-			</div>			
-		</nav>    
-		
-
-		<!-- Functional Content -->
-		<div id="time"></div>
->>>>>>> Stashed changes
-
   <div class="container">
     <h1 class="text-center mb-4">Project Details</h1>
 
@@ -40,11 +23,40 @@
         <label id="time" class="form-label">Elapsed Time</label>
         <input type="text" id="elapsed-time" class="form-control" readonly>
       </div>
+      <div class="flex-column justify-content-end mb-4">
+      <div id="dropdown-menu" class="dropdown mb-2">
+        <button id="DropdownText" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          Select Project
+        </button>
+        <ul id="projects-dropdown" class="dropdown-menu">
+          <li><span class="dropdown-item-text text-muted">Loading...</span></li>
+        </ul>
+      </div>
 
+      <!-- "Add new project" link -->
       <div class="mb-3">
+        <a href="#" id="add-new-project-link">➕ Add new project</a>
+      </div>
+
+      <!-- Hidden input for new project title -->
+      <div class="mb-3" id="new-project-input-container" style="display: none;">
         <label class="form-label">Project Title</label>
         <input type="text" id="title-input" class="form-control" placeholder="Enter project title">
       </div>
+        <!-- Dropdown Menu -->
+      <!--   <div class="dropdown"> -->
+      <!--     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"> -->
+      <!--       Select Project -->
+      <!--     </button> -->
+      <!--     <ul id="projects-dropdown" class="dropdown-menu"> -->
+      <!--       <li><span class="dropdown-item-text text-muted">Loading...</span></li> -->
+      <!--     </ul> -->
+      <!--   </div> -->
+      <!-- </div> -->
+      <!-- <div class="mb-3"> -->
+      <!--   <label class="form-label">Project Title</label> -->
+      <!--   <input type="text" id="title-input" class="form-control" placeholder="Enter project title"> -->
+      <!-- </div> -->
 
       <div class="mb-3">
         <label class="form-label">Description</label>
@@ -55,15 +67,9 @@
         <button id="save-project" class="btn btn-success">💾 Save Project</button>
       </div>
     </div>
-<<<<<<< Updated upstream
   </div>
-=======
 
-
-
-
-
->>>>>>> Stashed changes
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     window.electronAPI.getStopwatch().then((data) => {
       document.getElementById('time').innerText = 
@@ -78,10 +84,73 @@
       document.getElementById('elapsed-time').value =
         `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
     });
+    let showingProjectsDropdown = true;
+
+    document.getElementById('add-new-project-link').addEventListener('click', (e) => {
+      e.preventDefault(); // prevent page jump
+
+      if (showingProjectsDropdown) {
+        document.getElementById('new-project-input-container').style.display = 'block';
+        document.getElementById('title-input').focus(); // optional: focus input
+        document.getElementById('dropdown-menu').classList.add("d-none");
+        showingProjectsDropdown = false;
+
+      } else {
+        document.getElementById('new-project-input-container').style.display = 'none';
+        document.getElementById('title-input').focus(); // optional: focus input
+        document.getElementById('dropdown-menu').classList.remove("d-none");
+        showingProjectsDropdown = true;
+
+      }
+    });
+
+    async function populateDropdown() {
+      const titles = await window.electronAPI.getUniqueTitles();
+      const dropdown = document.getElementById('projects-dropdown');
+      dropdown.innerHTML = ''; // Clear existing
+
+      if (titles.length === 0) {
+        dropdown.innerHTML = '<li><span class="dropdown-item-text text-muted">No projects found</span></li>';
+        return;
+      }
+
+      titles.forEach((title) => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.className = 'dropdown-item';
+        a.href = '#';
+        a.textContent = title;
+
+        a.addEventListener('click', () => {
+          document.getElementById("DropdownText").textContent = title;
+
+          // Optionally populate inputs with the first project that matches this title
+          window.electronAPI.getProjects().then((projects) => {
+            const project = projects.find(p => p.title === title);
+            if (project) {
+              document.getElementById('title-input').value = project.title;
+              document.getElementById('description').value = project.description || '';
+              document.getElementById('elapsed-time').value = project.elapsedTime || '';
+            }
+          });
+        });
+
+        li.appendChild(a);
+        dropdown.appendChild(li);
+      });
+    }
+
+    populateDropdown();
 
     document.getElementById('save-project').addEventListener('click', () => {
+      let inputTitle;
+      if (showingProjectsDropdown) {
+        inputTitle =  document.getElementById("DropdownText").textContent;
+      } else {
+        inputTitle = document.getElementById('title-input').value;
+      }
       const project = {
-        title: document.getElementById('title-input').value,
+        title: inputTitle,
         description: document.getElementById('description').value,
         elapsedTime: document.getElementById('elapsed-time').value,
         timestamp: new Date().toISOString(),
