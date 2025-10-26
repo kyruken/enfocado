@@ -8,10 +8,20 @@
 			<link rel="preconnect" href="https://fonts.googleapis.com">
 			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 			<link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 		<style>
 			body {
+        background-color: #F4F4F5;
 				font-family: "Figtree", Arial, Helvetica, sans-serif;
 			}
+
+      .graph-container {
+        color: #fff;
+        border: 1px solid #e0dfdc; /* faint border like paper edge */
+        border-radius: 15px; 
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* gentle floating look */
+        width: 400px;
+      }
 		</style>
 		</head>
 		<body>
@@ -61,5 +71,18 @@
 				</div>
 			</div>
 
+
+    <div class="graph-container" id="graphsContainer">
+      <canvas id="totalTimePie"></canvas>
+    </div>
+    <div class="graph-container" id="graphsContainer">
+      <canvas id="todayTimePie"></canvas>
+    </div>
+
+    <div>
+      <ul id="recentSessions">
+      </ul>
+    </div>
+    <script src="dashboard.js"></script>
 		</body>
 </html>

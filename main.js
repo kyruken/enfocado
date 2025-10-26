@@ -62,3 +62,8 @@ ipcMain.handle('get-projects', () => {
 ipcMain.handle('get-unique-titles', () => {
   return store.get('uniqueTitles') || [];
 });
+
+
+ipcMain.on('go-to-dashboard', (event, data) => {
+  mainWindow.loadFile('dashboard.html');
+});

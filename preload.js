@@ -6,5 +6,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   saveProject: (project) => ipcRenderer.send('save-project', project),
   getProjects: () => ipcRenderer.invoke('get-projects'),
   getUniqueTitles: () => ipcRenderer.invoke('get-unique-titles'),
+  goToDashboard: () => ipcRenderer.send('go-to-dashboard'),
 });
 
