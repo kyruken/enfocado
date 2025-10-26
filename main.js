@@ -1,5 +1,11 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
-const path = require('path');
+import { app, BrowserWindow, ipcMain } from 'electron';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import Store from 'electron-store';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const store = new Store();
 
 let stopwatchData = {}; 
 
@@ -34,3 +40,10 @@ ipcMain.on('save-stopwatch', (event, data) => {
 
 ipcMain.handle('get-stopwatch', () => stopwatchData);
 
+ipcMain.on('save-project', (event, project) => {
+  const projects = store.get('projects') || [];
+  projects.push(project);
+  store.set('projects', projects);
+  console.log('whats in store:', store.get('projects'));
+  console.log('✅ Project saved:', project);
+});
