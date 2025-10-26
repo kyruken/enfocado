@@ -38,6 +38,59 @@
         <li><a class="dropdown-item" href="#">Something else here</a></li>
       </ul>
     </div>
+		<nav class="navbar bg-body-tertiary">
+			<div class="container-fluid">		
+				<a class="navbar-brand" href="#">Enfocado</a>
+			</div>			
+		</nav>
+
+
+		<div class="container text-center">
+				<div id="display">00:00:00</div>
+				<div class="row align-items-start">
+					<div class="col">
+						<button id="startBtn">Start</button>
+					</div>
+					<div class="col">
+						<button id="pauseBtn" >Pause</button>
+					</div>
+					<div class="col">
+						<button id="splitBtn" disabled>Split</button>
+					</div>
+					<div class="col">
+						<button id="resetBtn" disabled>Reset</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<ul id="splits" styles="--bs-bg-opacity: 1; background-color: rgba(var(--bs-tertiary-bg-rgb), var(--bs-bg-opacity)) !important;"></ul>
+
+		<hr>
+
+		<!-- <div class="center text-center">
+			<p id="oldDescription">Old description </p>
+			<button id="thisButton" class='btn btn-primary'>Create new ccccccc</button>
+
+			<button id="newProjectButton" class='btn btn-primary'>Create new project</button>
+			<form id="form" style="display:none;">
+				<input type="text" id="projectTextbox">Type project here</input>
+				<button type="submit">Submit</button>
+			</form>
+
+			<div class="dropdown">
+				<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+					Dropdown Button
+				</button>
+
+				<ul id="projectsDropdown" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					<li><a class="dropdown-item" href="#">Action</a></li>
+					<li><a class="dropdown-item" href="#">Another action</a></li>
+					<li><a class="dropdown-item" href="#">Something else here</a></li>
+				</ul>
+			</div>
+		</div> -->
+    
 
     <script src="renderer.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
