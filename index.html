@@ -9,6 +9,14 @@
   <body>
 
     <h1 id="title">Enfocado Title</h1>
+
+    <div id="display">00:00:00</div>
+    <button id="startBtn">Start</button>
+    <button id="pauseBtn" disabled>Pause</button>
+    <button id="splitBtn" disabled>Split</button>
+    <button id="resetBtn" disabled>Reset</button>
+
+    <ul id="splits"></ul>
     <p id="oldDescription">Old description </p>
     <button id="thisButton" class='btn btn-primary'>Create new ccccccc</button>
 
@@ -18,7 +26,7 @@
       <button type="submit">Submit</button>
     </form>
 
-    <div class="dropdown d-none">
+    <div class="dropdown">
       <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
         Dropdown Button
       </button>
@@ -32,9 +40,80 @@
 
     <script src="renderer.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/timer.js@latest/dist/timer.min.js"></script>
+
+ <script>
+    const display = document.getElementById("display");
+    const splits = document.getElementById("splits");
+    const startBtn = document.getElementById("startBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const splitBtn = document.getElementById("splitBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    let startTime = 0;
+    let elapsed = 0;
+    let interval = null;
+    let running = false;
+
+    function formatTime(ms) {
+      const totalSeconds = Math.floor(ms / 1000);
+      const hrs = Math.floor(totalSeconds / 3600);
+      const mins = Math.floor((totalSeconds % 3600) / 60);
+      const secs = totalSeconds % 60;
+      return [
+        hrs.toString().padStart(2, '0'),
+        mins.toString().padStart(2, '0'),
+        secs.toString().padStart(2, '0')
+      ].join(':');
+    }
+
+    function updateDisplay() {
+      const now = Date.now();
+      const diff = now - startTime + elapsed;
+      display.textContent = formatTime(diff);
+    }
+
+    startBtn.addEventListener('click', () => {
+      if (!running) {
+        startTime = Date.now();
+        interval = setInterval(updateDisplay, 100);
+        running = true;
+        startBtn.disabled = true;
+        pauseBtn.disabled = false;
+        splitBtn.disabled = false;
+        resetBtn.disabled = false;
+      }
+    });
+
+    pauseBtn.addEventListener('click', () => {
+      if (running) {
+        clearInterval(interval);
+        elapsed += Date.now() - startTime;
+        running = false;
+        startBtn.disabled = false;
+        pauseBtn.disabled = true;
+      }
+    });
+
+    resetBtn.addEventListener('click', () => {
+      clearInterval(interval);
+      elapsed = 0;
+      startTime = 0;
+      running = false;
+      display.textContent = '00:00:00';
+      splits.innerHTML = '';
+      startBtn.disabled = false;
+      pauseBtn.disabled = true;
+      splitBtn.disabled = true;
+      resetBtn.disabled = true;
+    });
+
+    splitBtn.addEventListener('click', () => {
+      const li = document.createElement('li');
+      li.textContent = 'Split: ' + display.textContent;
+      splits.appendChild(li);
+    });
+  </script> 
 
   </body>
-  <script>
-
-  </script>
 </html>
