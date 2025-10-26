@@ -44,6 +44,21 @@ ipcMain.on('save-project', (event, project) => {
   const projects = store.get('projects') || [];
   projects.push(project);
   store.set('projects', projects);
+
+  // Update unique titles set in store (as array)
+  const existingTitles = new Set(store.get('uniqueTitles') || []);
+  existingTitles.add(project.title); // add the new title
+  store.set('uniqueTitles', Array.from(existingTitles)); // convert Set to array
+
   console.log('whats in store:', store.get('projects'));
   console.log('✅ Project saved:', project);
+});
+
+ipcMain.handle('get-projects', () => {
+  const projects = store.get('projects') || [];
+  return projects;
+});
+
+ipcMain.handle('get-unique-titles', () => {
+  return store.get('uniqueTitles') || [];
 });
