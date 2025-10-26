@@ -3,33 +3,70 @@
     <meta charset="UTF-8" />
     <title>Hello from Electron renderer!</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: "Figtree", Arial, Helvetica, sans-serif;
+    }
+  </style>
   </head>
-  <body>
+  <body class="bg-light py-5">
 
-    <h1 id="title">Project Details</h1>
-    <div id="time"></div>
+  <h1 id="title">Details Page</h1>
 
-    <form id="form">
-      <input type="text" id="projectTextbox">Type project here</input>
-      <button type="submit">Submit</button>
-    </form>
+  <div class="container">
+    <h1 class="text-center mb-4">Project Details</h1>
 
-    <div class="dropdown">
-      <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-        Dropdown Button
-      </button>
+    <div class="card shadow p-4">
+      <div class="mb-3">
+        <label id="time" class="form-label">Elapsed Time</label>
+        <input type="text" id="elapsed-time" class="form-control" readonly>
+      </div>
 
-      <ul id="projectsDropdown" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <li><a class="dropdown-item" href="#">Action</a></li>
-        <li><a class="dropdown-item" href="#">Another action</a></li>
-        <li><a class="dropdown-item" href="#">Something else here</a></li>
-      </ul>
+      <div class="mb-3">
+        <label class="form-label">Project Title</label>
+        <input type="text" id="title-input" class="form-control" placeholder="Enter project title">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea id="description" class="form-control" rows="4" placeholder="Enter project description"></textarea>
+      </div>
+
+      <div class="text-center">
+        <button id="save-project" class="btn btn-success">💾 Save Project</button>
+      </div>
     </div>
+  </div>
   <script>
     window.electronAPI.getStopwatch().then((data) => {
       document.getElementById('time').innerText = 
         `Elapsed: ${Math.floor(data.elapsedTime / 1000)}s`;
       console.log(data, "Please work");
+    });
+
+    window.electronAPI.getStopwatch().then((data) => {
+      const seconds = Math.floor(data.elapsedTime / 1000) % 60;
+      const minutes = Math.floor(data.elapsedTime / 60000) % 60;
+      const hours = Math.floor(data.elapsedTime / 3600000);
+      document.getElementById('elapsed-time').value =
+        `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+    });
+
+    document.getElementById('save-project').addEventListener('click', () => {
+      const project = {
+        title: document.getElementById('title-input').value,
+        description: document.getElementById('description').value,
+        elapsedTime: document.getElementById('elapsed-time').value,
+        timestamp: new Date().toISOString(),
+      };
+
+      window.electronAPI.saveProject(project);
+      alert('✅ Project saved successfully!');
     });
   </script>
 
