@@ -17,6 +17,7 @@
     <button id="resetBtn" disabled>Reset</button>
 
     <ul id="splits"></ul>
+    <button id="stopSessionBtn">Stop Session</button>
     <p id="oldDescription">Old description </p>
     <button id="thisButton" class='btn btn-primary'>Create new ccccccc</button>
 
@@ -43,6 +44,7 @@
     <script src="https://cdn.jsdelivr.net/npm/timer.js@latest/dist/timer.min.js"></script>
 
  <script>
+
     const display = document.getElementById("display");
     const splits = document.getElementById("splits");
     const startBtn = document.getElementById("startBtn");
@@ -50,10 +52,22 @@
     const splitBtn = document.getElementById("splitBtn");
     const resetBtn = document.getElementById("resetBtn");
 
+    const stopSessionBtn = document.getElementById("stopSessionBtn");
+
     let startTime = 0;
     let elapsed = 0;
     let interval = null;
     let running = false;
+
+    document.getElementById('stopSessionBtn').addEventListener('click', () => {
+      const stopwatchData = { elapsedTime: elapsed };
+      window.electronAPI.saveStopwatch(stopwatchData);
+    });
+
+    stopSessionBtn.addEventListener("click", () => {
+      //Change page to details page
+      console.log("Change to details page");
+    })
 
     function formatTime(ms) {
       const totalSeconds = Math.floor(ms / 1000);
