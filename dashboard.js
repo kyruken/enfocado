@@ -1,5 +1,6 @@
 
 const recentSessionsContainer = document.getElementById("recentSessions");
+const metricsContainer = document.getElementById("metricsContainer");
 
 async function getStudySessions() {
   return window.electronAPI.getProjects();
@@ -67,8 +68,25 @@ function createDoughnutChart(chartId, inputTitle, inputDatasetLabel, inputHashma
     return new Chart(ctx, config);
   }
 
-function getTodaySessions(sessionsArray) {
-  return new Date();
+function createMetricsBox(metricLabel, metricValue) {
+  // Create main container
+  const box = document.createElement('div');
+  box.className = 'metric-box p-3 mb-3';
+
+  // Title / Label
+  const label = document.createElement('div');
+  label.className = 'metric-label text-muted small';
+  label.textContent = metricLabel;
+
+  // Value
+  const value = document.createElement('div');
+  value.className = 'metric-value fw-bold';
+  value.textContent = metricValue + " Hrs";
+
+  box.appendChild(label);
+  box.appendChild(value);
+
+  return box;
 }
 
 async function main() {
@@ -81,9 +99,25 @@ async function main() {
   let todaySessions = [];
   let today = new Date();
 
+
+  let todayHoursStudiedObject = 
+    {
+      hours: 0,
+      label: "Today's Hours Studied"
+    };
+  let allTimeHoursStudiedObject =  
+    {
+      hours: 0,
+      label: "All Time Studied"
+    };
+
   studySessions.forEach((session) => {
     if (formatDate(session.timestamp) == formatDate(today)) {
       todaySessions.push(session);
+      
+      todayHoursStudiedObject.hours += timeToHours(session.elapsedTime);
+    } else {
+      allTimeHoursStudiedObject.hours += timeToHours(session.elapsedTime);
     }
 
     if (!projectSessionHashmap.has(session.title)) {
@@ -105,7 +139,13 @@ async function main() {
 
   }
 
-  console.log(projectSessionHashmap);
+
+  let todayMetricBox = createMetricsBox(todayHoursStudiedObject.label, todayHoursStudiedObject.hours);
+  let allTimeMetricBox = createMetricsBox(allTimeHoursStudiedObject.label, allTimeHoursStudiedObject.hours);
+
+  metricsContainer.appendChild(todayMetricBox);
+  metricsContainer.appendChild(allTimeMetricBox);
+
   let totalTimePieChart = createDoughnutChart('totalTimePie', 'Total Time Studied', 'Total Study Time (Hrs)', projectSessionHashmap);
   let todayTimePieChart = createDoughnutChart('todayTimePie', 'Today Time Studied', "Today's Study Time (Hrs)", todaySessionHashmap);
   //Brings recent study sessions to the first element
